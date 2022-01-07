@@ -8,8 +8,9 @@
 import SwiftUI
 
 class EmojiMemoryGame: ObservableObject {
+    typealias Card = MemoryGame<String>.Card
     
-    @Published var theme: Theme
+    @Published private(set) var theme: Theme
     @Published private var model: MemoryGame<String>
     
     init() {
@@ -29,7 +30,7 @@ class EmojiMemoryGame: ObservableObject {
         return model.score
     }
     
-    // MARK: Intents
+    // MARK: - Intents
     
     func choose (_ card: MemoryGame<String>.Card) {
         model.choose(card)
@@ -40,6 +41,10 @@ class EmojiMemoryGame: ObservableObject {
         model = MemoryGame<String>(numberOfPairOfCards: (theme.numberOfPairs > theme.emojiSet.count) ? theme.emojiSet.count : theme.numberOfPairs) { pairIndex in
             theme.emojiSet[pairIndex]
         }
+    }
+    
+    func shuffle() {
+        model.shuffle()
     }
 }
 
