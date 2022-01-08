@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EmojiMemoryGameView: View {
     // our ViewModel
+    
     @ObservedObject var game: EmojiMemoryGame
     
     // a token which provides a namespace for the id's used in matchGeometryEffect
@@ -20,7 +21,11 @@ struct EmojiMemoryGameView: View {
             VStack {
                 gameBody
                 HStack {
-                    restart
+                    VStack {
+                        Text(String(game.score))
+                        restart
+                    }
+                    
                     Spacer()
                     shuffle
                 }
@@ -93,7 +98,7 @@ struct EmojiMemoryGameView: View {
                     }
             }
         }
-        .foregroundColor(CardConstants.color)
+        .foregroundColor(Color(rgbaColor: game.theme.cardsColor))
     }
     
     // the body of the deck from which we deal the cards out
@@ -116,7 +121,7 @@ struct EmojiMemoryGameView: View {
         // much better to let Views naturally lay themselves out if possible
         // but here, it's not clear what the "natural size" of a deck would be
         .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
-        .foregroundColor(CardConstants.color)
+        .foregroundColor(Color(rgbaColor: game.theme.cardsColor))
         .onTapGesture {
             // "deal" cards
             // note that this is not calling a user Intent function
@@ -131,12 +136,12 @@ struct EmojiMemoryGameView: View {
                 }
             }
         }
+
     }
     
     var shuffle: some View {
         Button("Shuffle") {
             // animated user Intent function call
-            // TODO: YOU MUST ADD THIS INTENT FUNC TO YOUR VIEWMODEL
             withAnimation {
                 game.shuffle()
             }
@@ -147,7 +152,6 @@ struct EmojiMemoryGameView: View {
         Button("Restart") {
             // animated user Intent function call
             // and, at the same time, resetting our local "dealing" private State
-            // TODO: YOU MUST ADD THIS INTENT FUNC TO YOUR VIEWMODEL
             withAnimation {
                 dealt = []
                 game.newGame()
@@ -206,11 +210,12 @@ struct CardView: View {
                 Text(card.content)
                     .rotationEffect(Angle.degrees(card.isMatched ? 360 : 0))
                     // only view modifiers ABOVE this .animation call are animated by it
-                    .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false))
+                    
                     .padding(5)
                     .font(Font.system(size: DrawingConstants.fontSize))
                     // view modifications like this .scaleEffect are not affected by the call to .animation ABOVE it
                     .scaleEffect(scale(thatFits: geometry.size))
+                    .animation(Animation.linear(duration: 0.5))
             }
             // this is the same as .modifier(Cardify(isFaceUp: card.isFaceUp))
             // it turns our ZStack with a Pie and a Text in it into a "card" on screen
@@ -231,11 +236,11 @@ struct CardView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        let game = EmojiMemoryGame()
-        // flip over the first card just so our Preview is always showing one face up card
-        game.choose(game.cards.first!)
-        return EmojiMemoryGameView(game: game)
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let game = EmojiMemoryGame()
+//        // flip over the first card just so our Preview is always showing one face up card
+//        game.choose(game.cards.first!)
+//        return EmojiMemoryGameView(game: game)
+//    }
+//}
