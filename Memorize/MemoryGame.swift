@@ -33,7 +33,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 if cards[chosenIndex].content == cards[potentialIndex].content {
                     cards[chosenIndex].isMatched = true
                     cards[potentialIndex].isMatched = true
-                    score += 4
+                    score += (4 + Int(cards[chosenIndex].bonusTimeRemaining + cards[potentialIndex].bonusTimeRemaining))
                 } else {
                     score -= 2
                 }

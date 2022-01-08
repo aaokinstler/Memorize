@@ -55,7 +55,6 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Identifiabl
         }
         return floor(size.width / CGFloat(columnCount))
     }
-
 }
 
 
