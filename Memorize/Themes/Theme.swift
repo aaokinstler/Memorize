@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import SwiftUI
 
-
-struct Theme: Identifiable, Codable {
+struct Theme: Identifiable, Codable, Hashable {
     
     var name: String
     var emojiSet: [String]

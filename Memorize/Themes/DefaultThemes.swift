@@ -8,7 +8,7 @@
 //import Foundation
 import SwiftUI
 
-enum Themes: CaseIterable {
+enum DefaultThemes: CaseIterable {
     case animals, vehicles, flags, food, sports, buildings
     
     var value: Theme {
