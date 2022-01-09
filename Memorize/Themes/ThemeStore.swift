@@ -17,6 +17,14 @@ class ThemeStore: ObservableObject {
         }
     }
     
+    var currentGames: Dictionary<Int, EmojiMemoryGame> {
+        var dict: Dictionary<Int, EmojiMemoryGame> = [:]
+        themes.forEach { gameTheme in
+            dict[gameTheme.id] = EmojiMemoryGame(gameTheme)
+        }
+        return dict
+    }
+    
     init() {
         restoreFromUserDefaults()
         if themes.isEmpty {
@@ -57,7 +65,7 @@ class ThemeStore: ObservableObject {
     private func getSafeNumberOfPairs(_ emojisCount: Int, _ numberOfPairs: Int?) -> Int {
         var safeNumberOfPairs = 0
         if let numberOfPairs = numberOfPairs {
-            safeNumberOfPairs = numberOfPairs > emojisCount ? emojisCount : emojisCount
+            safeNumberOfPairs = numberOfPairs > emojisCount ? emojisCount : numberOfPairs
         } else {
             safeNumberOfPairs = emojisCount
         }

@@ -12,18 +12,19 @@ struct ThemeManagerView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var themeToEdit: Theme?
     @State private var editMode: EditMode = .inactive
-    
+    @State private var currentGames: Dictionary<Int, EmojiMemoryGame> = [:]
+        
     var body: some View {
         NavigationView {
             List {
                 ForEach(store.themes) { theme in
-                        NavigationLink(destination: EmojiMemoryGameView(game: EmojiMemoryGame(theme))) {
-                            VStack {
+                    NavigationLink (destination: EmojiMemoryGameView(game: getGame(theme: theme))) {
+                            VStack(alignment: .leading) {
                                 Text(theme.name)
                                 Text(theme.emojiSet.joined())
                             }
-                        }.gesture(editMode == .active ? tapGesture(theme: theme) : nil)
-
+                        }
+                    .gesture(editMode == .active ? tapGesture(theme: theme) : nil)
                 }
                 .onDelete { indexSet in
                     store.themes.remove(atOffsets: indexSet)
@@ -32,6 +33,14 @@ struct ThemeManagerView: View {
             .navigationTitle("Choose your theme!")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar{
+                ToolbarItem(placement: ToolbarItemPlacement.navigationBarLeading) {
+                    Button{
+                        store.insertTheme(name: "", emojis: [], at: 0, numberOfPairs: 0, color: UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 1.0))
+                        themeToEdit = store.theme(at: 0)
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
                 ToolbarItem{
                     EditButton()
                 }
@@ -40,6 +49,13 @@ struct ThemeManagerView: View {
                 ThemeEditorView(theme: $store.themes[theme])
             }
             .environment(\.editMode, $editMode)
+            .onChange(of: themeToEdit) {[themeToEdit] newValue in
+                if newValue == nil {
+                    if let gameToRestart = currentGames[themeToEdit!.id] {
+                        gameToRestart.newGame()
+                    }
+                }
+            }
         }
     }
     
@@ -48,14 +64,22 @@ struct ThemeManagerView: View {
             themeToEdit = theme
         }
     }
+    
+    
+    private func getGame(theme: Theme) -> EmojiMemoryGame {
+        if let game = currentGames[theme.id] {
+            return game
+        } else {
+            let game = EmojiMemoryGame(theme)
+            currentGames[theme.id] = game
+            return game
+        }
+    }
+    
 }
 
 struct ThemeManagerView_Previews: PreviewProvider {
     static var previews: some View {
         ThemeManagerView().environmentObject(ThemeStore())
-//        PaletteManager()
-//            .previewDevice("iPhone 8")
-//            .environmentObject(PaletteStore(named: "Preview"))
-//            .preferredColorScheme(.light)
     }
 }

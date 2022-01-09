@@ -24,8 +24,8 @@ extension Collection where Element: Identifiable {
 
 extension Color {
     init(rgbaColor rgba: Theme.RGBAColor) {
-        self.init(.sRGB, red: rgba.red, green: rgba.green, blue: rgba.blue, opacity: rgba.alpha)
-         
+        let uiColor = UIColor(red: rgba.red, green: rgba.green, blue: rgba.blue, alpha: rgba.alpha)
+        self.init(uiColor: uiColor)
     }
 }
 
@@ -39,6 +39,20 @@ extension Theme.RGBAColor {
             UIColor(cgColor: cgColor).getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         }
         self.init(red: Double(red), green: Double(green), blue: Double(blue), alpha: Double(alpha))
+    }
+}
+
+extension Sequence where Element: Hashable {
+    func uniqued() -> [Element] {
+        var set = Set<Element>()
+        return filter { set.insert($0).inserted }
+    }
+}
+
+extension Theme {
+    var color: Color {
+        get { Color(rgbaColor: cardsColor) }
+        set { cardsColor = RGBAColor(color: newValue) }
     }
 }
 

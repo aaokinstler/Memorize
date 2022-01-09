@@ -10,7 +10,11 @@ import SwiftUI
 class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
     
-    @Published private(set) var theme: Theme
+    @Published  var theme: Theme {
+        didSet {
+            newGame()
+        }
+    }
     @Published private var model: MemoryGame<String>
     
     init(_ chosenTheme: Theme) {
@@ -36,7 +40,6 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     func newGame() {
-        theme = DefaultThemes.allCases.randomElement()!.value
         model = MemoryGame<String>(numberOfPairOfCards: (theme.numberOfPairs > theme.emojiSet.count) ? theme.emojiSet.count : theme.numberOfPairs) { pairIndex in
             theme.emojiSet[pairIndex]
         }

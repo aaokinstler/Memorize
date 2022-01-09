@@ -11,7 +11,6 @@ import SwiftUI
 struct MemorizeApp: App {
     
     let themeStore = ThemeStore()
-//    @StateObject var initTheme = Themes.allCases.randomElement()!.value
     
     var body: some Scene {
         WindowGroup {

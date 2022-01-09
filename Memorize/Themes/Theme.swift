@@ -14,7 +14,7 @@ struct Theme: Identifiable, Codable, Hashable {
     var numberOfPairs: Int
     var cardsColor: RGBAColor
     var id: Int
-    
+
     struct RGBAColor: Codable, Equatable, Hashable {
         let red: Double
         let green: Double

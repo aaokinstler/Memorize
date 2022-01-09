@@ -71,6 +71,13 @@ struct EmojiMemoryGameView: View {
         -Double(game.cards.firstIndex(where: { $0.id == card.id }) ?? 0)
     }
     
+    private func dealCards() {
+        for card in game.cards {
+            withAnimation(dealAnimation(for: card)) {
+                deal(card)
+            }
+        }
+    }
     // the body of the game itself
     // (i.e. not include any of the control buttons or the deck)
     var gameBody: some View {
@@ -122,20 +129,7 @@ struct EmojiMemoryGameView: View {
         // but here, it's not clear what the "natural size" of a deck would be
         .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
         .foregroundColor(Color(rgbaColor: game.theme.cardsColor))
-        .onTapGesture {
-            // "deal" cards
-            // note that this is not calling a user Intent function
-            // (instead it is just setting some of our private @State)
-            // that's because "dealing" is purely a temporary UI/animation thing
-            // it has nothing to do with our Model
-            // because "dealing" is not part of the Memorize game logic
-            // (dealing IS part of some card games, for example, Set)
-            for card in game.cards {
-                withAnimation(dealAnimation(for: card)) {
-                    deal(card)
-                }
-            }
-        }
+        .onTapGesture(perform: dealCards)
 
     }
     
