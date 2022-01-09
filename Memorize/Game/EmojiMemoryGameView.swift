@@ -34,6 +34,8 @@ struct EmojiMemoryGameView: View {
             deckBody
         }
         .padding()
+        .navigationTitle(Text(game.theme.name))
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     // private state used to temporary track

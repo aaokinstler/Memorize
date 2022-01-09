@@ -20,7 +20,7 @@ struct ThemeManagerView: View {
                 ForEach(store.themes) { theme in
                     NavigationLink (destination: EmojiMemoryGameView(game: getGame(theme: theme))) {
                             VStack(alignment: .leading) {
-                                Text(theme.name)
+                                Text(theme.name).foregroundColor(Color(rgbaColor: theme.cardsColor))
                                 Text(theme.emojiSet.joined())
                             }
                         }
